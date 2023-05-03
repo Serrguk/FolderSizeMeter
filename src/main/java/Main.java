@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -24,12 +25,13 @@ public class Main {
             return folder.length();
         }
         File[] files = folder.listFiles();
-        long length = 0;
-        assert files != null;
-        for (File file : files) {
-            length += getFolderSize(file);
+        if (files == null) {
+            System.out.println("Такого файла не существует!");
+            return 0;
         }
-        return length;
+        return Arrays.stream(files)
+                .mapToLong(Main::getFolderSize)
+                .sum();
     }
     static String getHumanReadableSize(long size) {
         if (size > GB) {
