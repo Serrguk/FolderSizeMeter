@@ -3,6 +3,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    public static long GB = 1073741824;
+    public static int MB = 1048576;
+    public static int KB = 1024;
     public static void main(String[] args) {
 
         while (true) {
@@ -12,6 +15,9 @@ public class Main {
                 System.out.println("Закругляемся...");
                 break;
             }
+            long size = getFolderSize(new File(path));
+            System.out.println("Размер файла: " + getHumanReadableSize(size));
+            System.out.println("Размер в байтах: " + size);
         }
     }
     static long getFolderSize(File file) {
@@ -24,5 +30,17 @@ public class Main {
                     .sum();
         }
         return -1;
+    }
+    static String getHumanReadableSize(long size) {
+        if (size > GB) {
+            return size / GB + " Gb";
+        }
+        if (size > MB) {
+            return size / MB + " Mb";
+        }
+        if (size > KB) {
+            return size / KB + " Kb";
+        }
+        return size + " b";
     }
 }
