@@ -1,18 +1,17 @@
 import java.io.File;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    public static long GB = 1073741824;
-    public static int MB = 1048576;
-    public static int KB = 1024;
+    public static final long GB = 1073741824;
+    public static final int MB = 1048576;
+    public static final int KB = 1024;
     public static void main(String[] args) {
 
         while (true) {
             System.out.println("Введите путь к папке или файлу: ");
             String path = new Scanner(System.in).nextLine();
             if (path.equals("")) {
-                System.out.println("Закругляемся...");
+                System.out.println("Введена пустая строка, закругляемся...");
                 break;
             }
             long size = getFolderSize(new File(path));
@@ -20,26 +19,27 @@ public class Main {
             System.out.println("Размер в байтах: " + size);
         }
     }
-    static long getFolderSize(File file) {
-        if (file.isFile()) {
-            return file.length();
-        } else if (file.isDirectory()) {
-            List<File> files = List.of(file);
-            return files.stream()
-                    .mapToLong(Main::getFolderSize)
-                    .sum();
+    static long getFolderSize(File folder) {
+        if (folder.isFile()) {
+            return folder.length();
         }
-        return -1;
+        File[] files = folder.listFiles();
+        long length = 0;
+        assert files != null;
+        for (File file : files) {
+            length += getFolderSize(file);
+        }
+        return length;
     }
     static String getHumanReadableSize(long size) {
         if (size > GB) {
-            return size / GB + " Gb";
+            return String.format("%.2f Gb", (double) size / GB);
         }
         if (size > MB) {
-            return size / MB + " Mb";
+            return String.format("%.2f Mb", (double) size / MB);
         }
         if (size > KB) {
-            return size / KB + " Kb";
+            return String.format("%.2f Kb", (double) size / KB);
         }
         return size + " b";
     }
